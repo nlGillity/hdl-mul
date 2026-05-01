@@ -1,28 +1,28 @@
 package test_pkg;
 
-    `include "items/packet.sv"
+    `include "packet.sv"
 
-    `include "test/test_config.sv"
+    `include "test_config.sv"
 
-    `include "env/agents/master/master_driver.sv"
-    `include "env/agents/master/master_monitor.sv"
-    `include "env/agents/master/master_generator.sv"
+    `include "master_driver.sv"
+    `include "master_monitor.sv"
+    `include "master_generator.sv"
 
-    `include "env/agents/slave/slave_driver.sv"
-    `include "env/agents/slave/slave_monitor.sv"
+    `include "slave_driver.sv"
+    `include "slave_monitor.sv"
 
-    `include "env/scoreboard.sv"
+    `include "scoreboard.sv"
 
-    `include "env/agents/master/master.sv"
-    `include "env/agents/slave/slave.sv"
+    `include "master.sv"
+    `include "slave.sv"
 
-    `include "env/env.sv"
+    `include "env.sv"
 
-    `include "test/test.sv"
-    `include "test/scenarios/test_overflow.sv"
-    `include "test/scenarios/test_overwhelmed.sv"
-    `include "test/scenarios/test_exhaustion.sv"
-    `include "test/scenarios/test_intensive.sv"
-    `include "test/scenarios/test_normal.sv"
+    `include "test.sv"
+    // `include "test_overflow.sv"
+    // `include "test_overwhelmed.sv"
+    // `include "test_exhaustion.sv"
+    // `include "test_intensive.sv"
+    // `include "test_normal.sv"
 
 endpackage

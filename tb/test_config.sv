@@ -11,7 +11,6 @@ class test_config;
     // Defaults
     //=============================================================================    
 
-    int width      = 8;
     int packet_num = 300;
     int timeout    = 10000;
 
@@ -19,13 +18,12 @@ class test_config;
     // Required external connection
     //=============================================================================
 
-    virtual mul_intf.master master_intf;
-    virtual mul_intf.slave  slave_intf;
+    virtual mul_intf intf;
 
     // Test enviroment implementation specific:
-    mailbox#(packet#(2 * width)) master_mbx;
-    mailbox#(packet#(    width)) gen2drv;
-    mailbox#(packet#(2 * width)) slave_mbx;
+    mailbox#(packet#(16)) master_mbx;
+    mailbox#(packet#(8)) gen2drv;
+    mailbox#(packet#(16)) slave_mbx;
     
     //=============================================================================
     // Randomized

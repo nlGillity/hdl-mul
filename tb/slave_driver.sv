@@ -14,7 +14,7 @@ class slave_driver;
     //============================================================================= 
     
     virtual function void configure(test_config cfg);
-        intf      = cfg.slave_intf;
+        intf      = cfg.intf;
         min_delay = cfg.slave_driver_min_delay;
         max_delay = cfg.slave_driver_max_delay;
     endfunction
@@ -25,20 +25,20 @@ class slave_driver;
 
     virtual task run();
         forever begin
-            wait(intf.rst_n);
+            wait(intf.rstn);
             fork
                 forever drive();
             join_none
-            wait(!intf.rst_n);
+            wait(!intf.rstn);
             disable fork;
             reset();
         end
     endtask
 
     virtual task drive();
-        intf.ready <= 1'b1;
+        intf.down_ready <= 1'b1;
         delay();
-        intf.ready <= 1'b0;
+        intf.down_ready <= 1'b0;
         delay();
     endtask
 
@@ -48,7 +48,7 @@ class slave_driver;
     endtask
 
     virtual task reset();
-        intf.ready <= 1'b0;
+        intf.down_ready <= 1'b0;
     endtask
 
 endclass

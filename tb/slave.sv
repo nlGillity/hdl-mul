@@ -22,7 +22,6 @@ class slave;
     //=============================================================================
 
     virtual task run();
-        credit_storage = 0;
         fork
             driver .run();
             monitor.run();

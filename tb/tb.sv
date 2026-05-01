@@ -50,12 +50,13 @@ module tb;
     // Reseting
     task reset();
         rstn            <= 1'b0;
-        intf.up_valid   <= 1'b0;
-        intf.a          <= 1'b0;
-        intf.b          <= 1'b0;
-        intf.down_ready <= 1'b0;
+        intf.master.up_vld     <= 1'b0;
+        intf.master.a          <= 1'b0;
+        intf.master.b          <= 1'b0;
+        intf.slave.down_ready <= 1'b0;
         repeat (RESET_DURATION) @(posedge clk);
         rstn            <= 1'b1;
+        intf.slave.down_ready <= 1'b1;
     endtask
 
     //=============================================================================
@@ -65,7 +66,7 @@ module tb;
     // int  passed_num;
     // test test_scenarios [$];
 
-    // test_normal      scenario_normal      = new(intf);
+    test scenario_normal;
     // test_exhaustion  scenario_exhaustion  = new(intf);
     // test_overwhelmed scenario_overwhelmed = new(intf);
     // test_overflow    scenario_overflow    = new(intf);
@@ -97,10 +98,12 @@ module tb;
     // // Running Tests
     // //=============================================================================
 
-    // initial begin
-    //     tests_randomize(test_scenarios);
-    //     tests_run(test_scenarios);
-    //     $finish();
-    // end
+    initial begin
+        scenario_normal = new(intf);
+        reset();
+        repeat (2) @(posedge clk);
+        scenario_normal.run();
+        $finish();
+    end
 
 endmodule

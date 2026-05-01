@@ -7,8 +7,7 @@ class test;
     // Required external connection
     //=============================================================================
 
-    virtual master_intf.master master_intf;
-    virtual master_intf.slave  slave_intf;
+    virtual mul_intf intf;
 
     mailbox#(packet#( 8)) gen2drv;        
     mailbox#(packet#(16)) master_mbx;
@@ -21,8 +20,7 @@ class test;
     function new (
         virtual mul_intf intf
     );
-        this.master_intf = intf.master;
-        this.slave_intf  = intf.slave;
+        this.intf = intf;
 
         configs    = new();
         env_obj    = new();
@@ -38,8 +36,7 @@ class test;
             $error($time(), " Failed to generate test configs.");
             $finish();
         end else begin
-            configs.master_intf = master_intf;
-            configs.slave_intf  = slave_intf;
+            configs.intf = intf;
 
             configs.gen2drv     = gen2drv;
             configs.master_mbx  = master_mbx;
@@ -50,7 +47,12 @@ class test;
     endfunction
 
     virtual function int config_gen();
-        return configs.randomize();
+        return configs.randomize() with {
+            master_driver_max_delay == 2;
+            master_driver_min_delay == 1;
+            slave_driver_max_delay  == 5;
+            slave_driver_min_delay  == 1;
+        };
     endfunction
 
     //------------------------------------------------------------------------------
@@ -83,7 +85,6 @@ class test;
         print_info();
         print_sim();
 
-        passed = 0;
         fork
             env_obj.run();
             timeout();
@@ -94,7 +95,7 @@ class test;
     endtask
 
     virtual task timeout();
-        repeat (configs.timeout) @(posedge master_intf.clk);
+        repeat (configs.timeout) @(posedge intf.clk);
         $display("Timeout!");
     endtask
 

@@ -15,7 +15,7 @@ class master_driver;
     //=============================================================================
 
     virtual function void configure(test_config cfg);
-        intf      = cfg.master_intf;
+        intf      = cfg.intf;
         min_delay = cfg.master_driver_min_delay;
         max_delay = cfg.master_driver_max_delay;
         gen2drv   = cfg.gen2drv;
@@ -27,7 +27,7 @@ class master_driver;
 
     virtual task run();
         forever begin
-            wait(intf.rst_n);
+            wait(intf.rstn);
             fork
                 forever begin
                     delay();
@@ -36,28 +36,32 @@ class master_driver;
                     reset();
                 end
             join_none
-            wait(!intf.rst_n);
+            wait(!intf.rstn);
             disable fork;
             reset();
         end
     endtask
 
     virtual task drive();
-        packet pkt;
+        packet#(8) pkt;
         pkt = new();
+
+        intf.up_vld <= 1'b1;
         gen2drv.get(pkt);
-        intf.valid <= 1'b1;
-        intf.data  <= pkt.data;
+        intf.a      <= pkt.data;
+        gen2drv.get(pkt);
+        intf.b      <= pkt.data;
     endtask
 
     virtual task wait_response();
         do    @(posedge intf.clk);
-        while (!intf.ready);
+        while (!intf.up_ready);
     endtask
 
     virtual task reset();
-        intf.valid <= 1'b0;
-        intf.data  <= 1'b0;
+        intf.up_vld <= 1'b0;
+        intf.a      <= '0;
+        intf.b      <= '0;
     endtask
 
     virtual task delay();

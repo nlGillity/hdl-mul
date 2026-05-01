@@ -12,7 +12,7 @@ class master_monitor;
     //=============================================================================
 
     virtual function void configure(test_config cfg);
-        intf       = cfg.master_intf.master;
+        intf       = cfg.intf;
         master_mbx = cfg.master_mbx;
     endfunction
 
@@ -22,22 +22,22 @@ class master_monitor;
 
     virtual task run();
         forever begin
-            wait(intf.rst_n);
+            wait(intf.rstn);
             fork
                 monitor();
             join_none
-            wait(!intf.rst_n);
+            wait(!intf.rstn);
             disable fork;
         end
     endtask;
 
     virtual task monitor();
         packet#(16) pkt;
-        pkt = new();
         forever begin
             @(posedge intf.clk);
-            if (intf.handshake()) begin
-                pkt.data = intf.a * intf.b;
+            if (intf.up_vld && intf.up_ready) begin
+                pkt = new();
+                pkt.data = 16'(byte'(intf.a) * byte'(intf.b));
                 master_mbx.put(pkt);
             end
         end
