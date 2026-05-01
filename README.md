@@ -1,4 +1,4 @@
-# 8-bit Piplined Multiplier
+# 8-bit Pipelined Multiplier
 
 ![](./pictures/mul.svg)
 
@@ -68,6 +68,10 @@ This combinational logic helps prevent the pipeline from coming to a stall. If t
 
 ### Radix-4 Booth Recoder
 ![](./pictures/radix4.svg)
+
+## Verification
+
+![](./pictures/tb.svg)
 
 ## Waveform
 
