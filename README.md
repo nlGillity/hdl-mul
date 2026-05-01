@@ -68,3 +68,7 @@ This combinational logic helps prevent the pipeline from coming to a stall. If t
 
 ### Radix-4 Booth Recoder
 ![](./pictures/radix4.svg)
+
+## Waveform
+
+![](./pictures/waveform.png)
