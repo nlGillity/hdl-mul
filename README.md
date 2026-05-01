@@ -8,6 +8,15 @@ This is an implementation of a 8-bit signed integer multiplication module that i
 
 This is an educational project aimed at practicing  techniques drawn from the [“Chip Design School”](https://engineer.yadro.com/chip-design-school/) course and the book [“Digital Design: A Systems Approach”](https://www.amazon.com/Digital-Design-Approach-William-Dally/dp/0521199506) such as valid-ready protocol, pipelining with backpressure, Booth encoding, Wallace trees, clock gating.
 
+## Results
+
+Here are the results of the synthesis of different implementations of the multiplier such as pipelined, pure combinational, default Quartus sythesis (without DSP).
+
+| Pipelined, MHz | Combinational, MHz | assign res = a * b, MHz |
+|----------------|--------------------|-------------------------|
+| $$311.62$$     |     $$129.80$$     |         $$133.46$$      |
+
+
 
 ## Implementation Features
 
