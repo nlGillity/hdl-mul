@@ -99,6 +99,10 @@ module mul_tb;
         b          <= next_b;
         up_vld     <= next_up_vld;
         down_ready <= next_down_ready;
+        @(posedge clk);
+        a          <= '0;
+        b          <= '0;
+        up_vld     <= '0;
     endtask
 
     task delay( input int min, input int max );
@@ -134,9 +138,8 @@ module mul_tb;
         for (int i = 0; i < TEST_NUM; ++i) begin
             prepare();
             drive  ();
-            // @(posedge clk);
+            @(posedge clk);
             // check  ();
-            delay  (1, 10);
         end
         if (error_cnt) $display("FAILED");
         else           $display("PASSED");
