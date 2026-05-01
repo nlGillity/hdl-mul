@@ -6,6 +6,6 @@ SOURCE     = $(TB) $(SUBMODULES) $(MODULE)
 
 .PHONY: run
 run:
-	iverilog -g2012 -o $(OUT) $(SOURCE)
+	iverilog -g2012 -I. -o $(OUT) $(SOURCE)
 	@vvp $(OUT)
 	@rm  $(OUT)
