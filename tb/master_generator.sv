@@ -1,19 +1,20 @@
-class slave_monitor;    
+class master_generator;
+
+    int gen_num;
 
     //=============================================================================
     // Required external connection
     //=============================================================================
 
-    virtual mul_intf.slave intf;
-    mailbox#(packet#(16))  slave_mbx; 
-    
+    mailbox#(packet#(8)) gen2drv;
+
     //=============================================================================
     // Functions
     //=============================================================================
 
     virtual function void configure(test_config cfg);
-        intf      = cfg.slave_intf.slave;
-        slave_mbx = cfg.slave_mbx;
+        gen_num = cfg.packet_num;
+        gen2drv = cfg.gen2drv;
     endfunction
 
     //=============================================================================
@@ -21,25 +22,20 @@ class slave_monitor;
     //=============================================================================
 
     virtual task run();
-        forever begin
-            wait(intf.rst_n);
-            fork
-                monitor();
-            join_none
-            wait(!intf.rst_n);
-            disable fork;
-        end
-    endtask;
+        repeat (2 * gen_num) gen();
+    endtask
 
-    virtual task monitor();
-        packet#(16) pkt;
+    virtual task gen();
+        packet pkt;
         pkt = new();
-        forever begin
-            @(posedge intf.clk)
-            if (intf.handshake()) begin
-                pkt.data = intf.data;
-                slave_mbx.put(pkt);
-            end
+        if ( pkt.randomize() == 0 ) begin
+            $error(
+                $time(), 
+                " Failed to generate a packet."
+            );
+            $finish();
+        end else begin
+            gen2drv.put(pkt);
         end
     endtask
 
