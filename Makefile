@@ -66,7 +66,10 @@ else
 		endif
 	endif
 	VERILOG += $(shell find $(TARGET)/ -name "*_pkg.*v")
+	SIM_OPTS += +incdir=./src/$(DUT)/$(DUT)_sva.sv
+	SIM_OPTS += +incdir=./src/$(DUT)/$(DUT)_cov.sv
 	VERILOG += ./src/$(DUT)/$(DUT).sv
+
 	VERILOG += $(SUBMODULES)
 	VERILOG += $(TARGET)/$(TOP).sv
 endif
