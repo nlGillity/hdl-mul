@@ -10,7 +10,7 @@ This is an educational project aimed at practicing  techniques drawn from the [�
 
 ## Results
 
-Here are the results of the synthesis of different implementations of the multiplier such as pipelined, pure combinational, default Quartus sythesis (without DSP).
+Here are the results of the synthesis of different implementations of the multiplier such as pipelined, pure combinational, default Quartus synthesis (without DSP).
 
 | Pipelined, MHz | Combinational, MHz | assign res = a * b, MHz |
 |----------------|--------------------|-------------------------|
@@ -70,8 +70,21 @@ This combinational logic helps prevent the pipeline from coming to a stall. If t
 ![](./pictures/radix4.svg)
 
 ## Verification
+The verification environment has a standard structure. The environment consists of `master` and `slave` agents that generate signals to the corresponding DUT ports, monitor handshakes on both sides, and send port state "slices" during handshakes to the `scoreboard`. All of this works via mailboxes. The scoreboard compares the expected result with the result from the DUT outpuе and asserts any mismatches. The test environment is placed in a `test` class, which configures the agents and the scoreboard. The test class is placed in the `testbench`. Interaction between the test and the DUT is carried out via a virtual interface.
 
 ![](./pictures/tb.svg)
+
+### SVA and Coverage
+The SystemVerilog assertions are located in the multiplier module and verify that the module adheres to the valid-ready protocol and that the pipeline stall is functioning correctly. Concurrent assertions were used to define these assertions. 
+
+Cover properties are also located in this module and cover the valid-ready pпшгrotocol, various combinations of input values, and pipeline stalls.
+
+### Test scenarios
+Test scenarios differ in terms of the frequency and duration of input ports from the master and slave to the DUT:
+* **Busy slave:** a scenario in which the master's request rate is an order of magnitude higher than the slave's response rate.
+* **Free fall:** a scenario in which data passes through the pipeline without stalls.
+* **Overloaded:** a scenario in which there are intensive requests from the master and intensive repsonses from the slave.
+* **Sparse**: a scenario in which master's requests are rare, and the slave is always ready to receive data.
 
 ## Waveform
 
