@@ -10,7 +10,7 @@ This is an implementation of a 8-bit signed integer multiplication module that i
 
 This is an educational project aimed at practicing  techniques drawn from the [“Chip Design School”](https://engineer.yadro.com/chip-design-school/) course and the book [“Digital Design: A Systems Approach”](https://www.amazon.com/Digital-Design-Approach-William-Dally/dp/0521199506) such as valid-ready protocol, pipelining with backpressure, Booth encoding, Wallace trees, clock gating.
 
-## Results
+## Synthesis Results
 
 Here are the results of the synthesis of different implementations of the multiplier such as pipelined, pure combinational, default Quartus synthesis (without DSP).
 
@@ -80,8 +80,8 @@ The SystemVerilog assertions are located in the multiplier module and verify tha
 
 Cover properties are also located in this module and cover the valid-ready protocol, various combinations of input values, and pipeline stalls.
 
-### Test scenarios
-Test scenarios differ in terms of the frequency and duration of input ports from the master and slave to the DUT:
+### Test Scenarios
+Test scenarios are randomized tests that differ in terms of the frequency and duration of input ports from the master and slave to the DUT:
 * **Busy slave:** a scenario in which the master's request rate is an order of magnitude higher than the slave's response rate.
 
 ![](./pictures/busy_slave.png)
@@ -97,3 +97,95 @@ Test scenarios differ in terms of the frequency and duration of input ports from
 * **Sparse**: a scenario in which master's requests are rare, and the slave is always ready to receive data.
 
 ![](./pictures/sparse.png)
+
+## Verification Results
+According to the simulation results, none of the assertions triggered, and all the coverage targets were met.
+
+![](./pictures/tb_res.png)
+
+Below is the output from the Questa Sim simulator console. No errors occurred, so everything is working :)
+
+```
+# =====================================================
+# Name: Test (Overloaded)
+# Desc: A scenario in which there are intensive requests
+#  from the master and intensive repsonses from the slave.
+# ------------------ Configurations -------------------
+# Tests's enviroment configs:
+# 	packet_num              = 100
+# 	timeout                 = 10000
+# 
+# Master's driver configs:
+# 	master_driver_min_delay = 1
+# 	master_driver_max_delay = 3
+# 
+# Slave's driver configs:
+# 	slave_driver_min_delay  = 1
+# 	slave_driver_max_delay  = 3
+# -------------------- Simulation ---------------------
+# Simulating...
+# =====================================================
+# 
+# =====================================================
+# Name: Test (Busy Slave)
+# Desc: A scenario in which the master's request rate
+#  is an order of magnitude higher than
+#  the slave's response rate.
+# ------------------ Configurations -------------------
+# Tests's enviroment configs:
+# 	packet_num              = 100
+# 	timeout                 = 10000
+# 
+# Master's driver configs:
+# 	master_driver_min_delay = 1
+# 	master_driver_max_delay = 5
+# 
+# Slave's driver configs:
+# 	slave_driver_min_delay  = 10
+# 	slave_driver_max_delay  = 15
+# -------------------- Simulation ---------------------
+# Simulating...
+# =====================================================
+# 
+# =====================================================
+# Name: Test (Sparse)
+# Desc: A scenario in which master's requests are rare,
+#  and the slave is always ready to receive data.
+# ------------------ Configurations -------------------
+# Tests's enviroment configs:
+# 	packet_num              = 100
+# 	timeout                 = 10000
+# 
+# Master's driver configs:
+# 	master_driver_min_delay = 1
+# 	master_driver_max_delay = 10
+# 
+# Slave's driver configs:
+# 	slave_driver_min_delay  = 1
+# 	slave_driver_max_delay  = 1
+# -------------------- Simulation ---------------------
+# Simulating...
+# =====================================================
+# 
+# =====================================================
+# Name: Test (Free fall)
+# Desc: A scenario in which data passes through
+#  the pipeline without stalls.
+# ------------------ Configurations -------------------
+# Tests's enviroment configs:
+# 	packet_num              = 100
+# 	timeout                 = 10000
+# 
+# Master's driver configs:
+# 	master_driver_min_delay = 0
+# 	master_driver_max_delay = 0
+# 
+# Slave's driver configs:
+# 	slave_driver_min_delay  = 0
+# 	slave_driver_max_delay  = 0
+# -------------------- Simulation ---------------------
+# Simulating...
+# =====================================================
+# ** Note: $finish    : ./tb/tb.sv(103)
+#    Time: 25405 ns  Iteration: 2  Instance: /tb
+```
