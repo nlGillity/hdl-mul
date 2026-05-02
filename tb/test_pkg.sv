@@ -19,10 +19,9 @@ package test_pkg;
     `include "env.sv"
 
     `include "test.sv"
-    // `include "test_overflow.sv"
-    // `include "test_overwhelmed.sv"
-    // `include "test_exhaustion.sv"
-    // `include "test_intensive.sv"
-    // `include "test_normal.sv"
+    `include "tests/test_sparse.sv"
+    `include "tests/test_free_fall.sv"
+    `include "tests/test_busy_slave.sv"
+    `include "tests/test_overloaded.sv"
 
 endpackage

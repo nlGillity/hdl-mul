@@ -8,6 +8,8 @@ EXAMPLE_REUSE =
 TOP = tb
 export TOP
 
+TESTS = .$(shell find "./tb/tests" -maxdepth 1 -name "*.sv" -type f)
+
 # Output directory
 OUT = $(TARGET)/out
 export OUT
@@ -69,9 +71,10 @@ else
 	SIM_OPTS += +incdir=./src/$(DUT)/$(DUT)_sva.sv
 	SIM_OPTS += +incdir=./src/$(DUT)/$(DUT)_cov.sv
 	VERILOG += ./src/$(DUT)/$(DUT).sv
-
 	VERILOG += $(SUBMODULES)
+
 	VERILOG += $(TARGET)/$(TOP).sv
+	ALL_VERILOG += $(TESTS)
 endif
 
 # All Verilog / SystemVerilog files from TARGET directory

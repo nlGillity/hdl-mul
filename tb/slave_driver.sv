@@ -37,7 +37,7 @@ class slave_driver;
 
     virtual task drive();
         intf.down_ready <= 1'b1;
-        delay();
+        @(posedge intf.clk);
         intf.down_ready <= 1'b0;
         delay();
     endtask

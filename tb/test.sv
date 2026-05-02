@@ -27,8 +27,6 @@ class test;
         gen2drv    = new();
         master_mbx = new();
         slave_mbx  = new();
-
-        configure();
     endfunction
 
     virtual function void configure();
@@ -47,12 +45,7 @@ class test;
     endfunction
 
     virtual function int config_gen();
-        return configs.randomize() with {
-            master_driver_max_delay == 2;
-            master_driver_min_delay == 1;
-            slave_driver_max_delay  == 5;
-            slave_driver_min_delay  == 1;
-        };
+        return configs.randomize();
     endfunction
 
     //------------------------------------------------------------------------------

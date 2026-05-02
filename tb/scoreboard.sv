@@ -25,7 +25,7 @@ class scoreboard;
         packet#(16) in_pkt,
         packet#(16) out_pkt
     );
-        $display("expected = %d; real = %d", in_pkt.data, out_pkt.data);
+        // $display("expected = %d; real = %d", in_pkt.data, out_pkt.data);
         assert (in_pkt.data == out_pkt.data) else begin
             $error(
                 "[%0d expected %0d; real %0d", 
