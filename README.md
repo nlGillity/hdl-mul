@@ -2,6 +2,8 @@
 
 ![](./pictures/mul.svg)
 
+![](./pictures/waveform.png)
+
 ## Description
 
 This is an implementation of a 8-bit signed integer multiplication module that incorporates techniques to increase clock frequency, throughput, and energy efficiency. This module has the potential to be used for multiplication in digital signal processing, computer arithmetic (in ALU's), and other applications requiring fast and efficient multiplication.
@@ -15,7 +17,6 @@ Here are the results of the synthesis of different implementations of the multip
 | Pipelined, MHz | Combinational, MHz | assign res = a * b, MHz |
 |----------------|--------------------|-------------------------|
 | $$311.62$$     |     $$129.80$$     |         $$133.46$$      |
-
 
 
 ## Implementation Features
@@ -77,15 +78,22 @@ The verification environment has a standard structure. The environment consists 
 ### SVA and Coverage
 The SystemVerilog assertions are located in the multiplier module and verify that the module adheres to the valid-ready protocol and that the pipeline stall is functioning correctly. Concurrent assertions were used to define these assertions. 
 
-Cover properties are also located in this module and cover the valid-ready pпшгrotocol, various combinations of input values, and pipeline stalls.
+Cover properties are also located in this module and cover the valid-ready protocol, various combinations of input values, and pipeline stalls.
 
 ### Test scenarios
 Test scenarios differ in terms of the frequency and duration of input ports from the master and slave to the DUT:
 * **Busy slave:** a scenario in which the master's request rate is an order of magnitude higher than the slave's response rate.
+
+![](./pictures/busy_slave.png)
+
 * **Free fall:** a scenario in which data passes through the pipeline without stalls.
+
+![](./pictures/free_fall.png)
+
 * **Overloaded:** a scenario in which there are intensive requests from the master and intensive repsonses from the slave.
+
+![](./pictures/overloaded.png)
+
 * **Sparse**: a scenario in which master's requests are rare, and the slave is always ready to receive data.
 
-## Waveform
-
-![](./pictures/waveform.png)
+![](./pictures/sparse.png)
