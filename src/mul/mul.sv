@@ -1,4 +1,4 @@
-`timescale 10ns/100ps;
+`timescale 10ns/100ps
 
 module mul #(
     localparam int DATA_WIDTH = 8
@@ -83,7 +83,7 @@ module mul #(
     logic [DATA_WIDTH + 1:0] pp_ff [0:DATA_WIDTH / 2 - 1];
 
     always_ff @(posedge clk) begin
-        if (flow_en[0] & valid_ff[0])
+        if (flow_en[0] & up_vld)
             for (int i = 0; i < DATA_WIDTH / 2; ++i)
                 pp_ff[i] <= pp[i];
     end
@@ -130,7 +130,7 @@ module mul #(
     logic [ 9:0] pp3_ff;
 
     always_ff @(posedge clk) begin
-        if (flow_en[1] & valid_ff[1]) begin
+        if (flow_en[1] & valid_ff[0]) begin
             pp0_stage1_ff <= pp0_stage1;
             pp1_stage1_ff <= pp1_stage1;
             pp3_ff        <= pp_ff[3];
@@ -174,7 +174,7 @@ module mul #(
     logic [11:0] pp1_stage2_ff;
 
     always_ff @(posedge clk) begin
-        if (flow_en[2] & valid_ff[2]) begin
+        if (flow_en[2] & valid_ff[1]) begin
             pp0_stage2_ff <= pp0_stage2;
             pp1_stage2_ff <= pp1_stage2;
         end
@@ -191,7 +191,14 @@ module mul #(
     //------------------------------------------------------------------------
 
     always_ff @(posedge clk) begin
-        if (flow_en[LAST] & valid_ff[LAST]) res <= sum;
+        if (flow_en[LAST] & valid_ff[LAST - 1]) res <= sum;
     end
+
+    //=======================================================================
+    // SVA and Coverage
+    //=======================================================================
+
+    `include "mul_sva.sv"
+    `include "mul_cov.sv"
 
 endmodule

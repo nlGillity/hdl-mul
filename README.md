@@ -1,6 +1,8 @@
-# 8-bit Piplined Multiplier
+# 8-bit Pipelined Multiplier
 
 ![](./pictures/mul.svg)
+
+![](./pictures/waveform.png)
 
 ## Description
 
@@ -10,12 +12,11 @@ This is an educational project aimed at practicing  techniques drawn from the [‚
 
 ## Results
 
-Here are the results of the synthesis of different implementations of the multiplier such as pipelined, pure combinational, default Quartus sythesis (without DSP).
+Here are the results of the synthesis of different implementations of the multiplier such as pipelined, pure combinational, default Quartus synthesis (without DSP).
 
 | Pipelined, MHz | Combinational, MHz | assign res = a * b, MHz |
 |----------------|--------------------|-------------------------|
 | $$311.62$$     |     $$129.80$$     |         $$133.46$$      |
-
 
 
 ## Implementation Features
@@ -69,6 +70,30 @@ This combinational logic helps prevent the pipeline from coming to a stall. If t
 ### Radix-4 Booth Recoder
 ![](./pictures/radix4.svg)
 
-## Waveform
+## Verification
+The verification environment has a standard structure. The environment consists of `master` and `slave` agents that generate signals to the corresponding DUT ports, monitor handshakes on both sides, and send port state "slices" during handshakes to the `scoreboard`. All of this works via mailboxes. The scoreboard compares the expected result with the result from the DUT outpu–µ and asserts any mismatches. The test environment is placed in a `test` class, which configures the agents and the scoreboard. The test class is placed in the `testbench`. Interaction between the test and the DUT is carried out via a virtual interface.
 
-![](./pictures/waveform.png)
+![](./pictures/tb.svg)
+
+### SVA and Coverage
+The SystemVerilog assertions are located in the multiplier module and verify that the module adheres to the valid-ready protocol and that the pipeline stall is functioning correctly. Concurrent assertions were used to define these assertions. 
+
+Cover properties are also located in this module and cover the valid-ready protocol, various combinations of input values, and pipeline stalls.
+
+### Test scenarios
+Test scenarios differ in terms of the frequency and duration of input ports from the master and slave to the DUT:
+* **Busy slave:** a scenario in which the master's request rate is an order of magnitude higher than the slave's response rate.
+
+![](./pictures/busy_slave.png)
+
+* **Free fall:** a scenario in which data passes through the pipeline without stalls.
+
+![](./pictures/free_fall.png)
+
+* **Overloaded:** a scenario in which there are intensive requests from the master and intensive repsonses from the slave.
+
+![](./pictures/overloaded.png)
+
+* **Sparse**: a scenario in which master's requests are rare, and the slave is always ready to receive data.
+
+![](./pictures/sparse.png)
