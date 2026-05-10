@@ -1,37 +1,24 @@
-class env;
+import uvm_pkg::*;
+`include "uvm_macros.svh"
 
-    master     master_obj;
-    slave      slave_obj;
-    scoreboard scoreboard_obj;
+class base_env extends uvm_env;
 
-    //=============================================================================
-    // Functions
-    //=============================================================================
+    master_agent master;
+    slave_agent  slave;
 
-    function new();
-        master_obj     = new();
-        slave_obj      = new();
-        scoreboard_obj = new();
+    `uvm_component_utils(env)
+
+    function new(string name = "base_env", uvm_component parent);
+        super.new(name, parent);
     endfunction
 
-    //-----------------------------------------------------------------------------
+    function void build_phase(uvm_phase phase);
+        super.build_phase(phase);
 
-    virtual function void configure(test_config cfg);
-        master_obj    .configure(cfg);
-        slave_obj     .configure(cfg);
-        scoreboard_obj.configure(cfg);
-    endfunction 
+        master = master_agent::type_id::create("master", this);
+        slave  = slave_agent::type_id::create("slave", this);
 
-    //=============================================================================
-    // Tasks
-    //=============================================================================
-    virtual task run();
-        fork
-            master_obj    .run();
-            slave_obj     .run();
-            scoreboard_obj.run();
-        join_any
-        disable fork;
-    endtask
+        `uvm_info(get_full_name(), "Build stage complete.", UVM_LOW);
+    endfunction
 
 endclass
