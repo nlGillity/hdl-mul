@@ -21,6 +21,8 @@ class valid_ready_item #(
     
     // Validity
     rand bit valid;
+    // Readiness
+    rand bit ready;
     // Operands
     rand data_t data[0:PARAMS.data_num - 1];
     
@@ -87,6 +89,7 @@ function void valid_ready_item::do_copy(uvm_object rhs);
     
     super.do_copy(rhs);
     valid = rhs_.valid;
+    ready = rhs_.ready;
     data = rhs_.data;
 endfunction : do_copy
 
@@ -95,6 +98,7 @@ function string valid_ready_item::convert2string();
     string str = "";
     str = {str, "Items:\n"};
     str = {str, $sformatf("\tvalid : 'b%b\n", valid)};
+    str = {str, $sformatf("\tready : 'b%b\n", ready)};
     foreach (data[i])
         str = {str, $sformatf("\tdata[%d] : 'h%h\n", i, data[i])};
     return str;
